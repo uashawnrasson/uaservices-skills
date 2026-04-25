@@ -5,7 +5,7 @@ description: Use when writing a new skill for the UA Services MCP / LUNA session
 
 # Writing UA Services Skills
 
-Skills for this environment fill a specific gap: the agent will always have `get_runtime_helpers`, `get_patch_ops`, and the Stability API schema in context before acting. Assume all of that is already known. A skill only earns its place if it contains something the agent cannot derive from those sources.
+Skills for this environment fill a specific gap: the agent will always have `get_runtime_helpers`, `get_patch_ops`, and the catalog API (`get_catalog_api`) in context before acting. Assume all of that is already known. A skill only earns its place if it contains something the agent cannot derive from those sources.
 
 ## The one question that matters
 
@@ -31,7 +31,7 @@ If no — write exactly that, and nothing else.
 
 - Anything documented in the layer-1 docstring of a helper
 - Anything in the patch op schema description
-- Anything in the Stability API schema
+- Anything in the catalog API (`get_catalog_api`)
 - General patterns the agent would infer from signatures alone
 - Warnings that duplicate existing docstring warnings
 - Background explanation of how the system works (the agent knows this)
