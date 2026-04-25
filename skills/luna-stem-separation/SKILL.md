@@ -9,7 +9,7 @@ description: Use when separating a mixed audio file into individual stems (drums
 
 `separate_stems` returns `ok({stems, stem_paths, source_wav, provider, config})`.
 
-`stems` is a dict keyed by stem name — always `drums`, `bass`, `vocals`, `other`. Values are absolute file paths:
+`stems` is a dict keyed by stem name — always `drums`, `bass`, `vocals`, `other`. Values are absolute file paths. Use `stems` (the dict) in code; `stem_paths` is a convenience list of the same paths in insertion order.
 
 ```python
 result = separate_stems(client, '/path/to/mix.wav')

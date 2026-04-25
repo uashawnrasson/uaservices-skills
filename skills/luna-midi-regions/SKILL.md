@@ -5,6 +5,8 @@ description: Use when placing MIDI notes or patterns into a LUNA session — cho
 
 # MIDI Regions
 
+> **Status: write path not yet implemented.** `insert_midi_region` and `set_midi_content` pass schema validation but raise `midi_table_not_decodable` at execution time — the `ua:luna:midi_table` binary wire format has not been reverse-engineered. The op and tick math below are correct for when the write path lands. Do not attempt MIDI placement until this is resolved.
+
 ## Tick system
 
 All note positions use **480 PPQ** (pulses per quarter note). At 4/4 time:
@@ -37,6 +39,10 @@ C4  = 60;  C5  = 72
 
 ## Placing a MIDI region
 
+**Requires an instrument track** (`track_type='instrument'`). Audio tracks reject the op. Create the instrument track via `new_track` with a `preset_uid` — the server derives `track_type='instrument'` from the preset.
+
+`channel` is marked optional in the schema (default 0) but enforced as required at runtime. Always include `'channel': 0` on every note.
+
 ```python
 doc = export_session(client, session_uid)
 rev = doc['revision']
@@ -45,20 +51,20 @@ result = apply_patch(client, session_uid, {
     'base_revision': rev,
     'ops': [{
         'op': 'insert_midi_region',
-        'track_ref': {'kind': 'track', 'uid': track_uid},
+        'track_ref': {'kind': 'track', 'uid': instrument_track_uid},
         'region': {
             'name': 'Chord Progression',
             'start': {'musical': {'bars': 1, 'beats': 1}, 'clock': {'ms': 0}},
             'end':   {'musical': {'bars': 5, 'beats': 1}, 'clock': {'ms': 8000}},
             'notes': [
                 # A major chord, bar 1, whole note
-                {'pitch': 69, 'velocity': 80, 'start_tick': 0,    'duration_ticks': 1920},
-                {'pitch': 73, 'velocity': 80, 'start_tick': 0,    'duration_ticks': 1920},
-                {'pitch': 76, 'velocity': 80, 'start_tick': 0,    'duration_ticks': 1920},
+                {'pitch': 69, 'velocity': 80, 'start_tick': 0,    'duration_ticks': 1920, 'channel': 0},
+                {'pitch': 73, 'velocity': 80, 'start_tick': 0,    'duration_ticks': 1920, 'channel': 0},
+                {'pitch': 76, 'velocity': 80, 'start_tick': 0,    'duration_ticks': 1920, 'channel': 0},
                 # D major chord, bar 2
-                {'pitch': 62, 'velocity': 80, 'start_tick': 1920, 'duration_ticks': 1920},
-                {'pitch': 66, 'velocity': 80, 'start_tick': 1920, 'duration_ticks': 1920},
-                {'pitch': 69, 'velocity': 80, 'start_tick': 1920, 'duration_ticks': 1920},
+                {'pitch': 62, 'velocity': 80, 'start_tick': 1920, 'duration_ticks': 1920, 'channel': 0},
+                {'pitch': 66, 'velocity': 80, 'start_tick': 1920, 'duration_ticks': 1920, 'channel': 0},
+                {'pitch': 69, 'velocity': 80, 'start_tick': 1920, 'duration_ticks': 1920, 'channel': 0},
             ]
         }
     }]
