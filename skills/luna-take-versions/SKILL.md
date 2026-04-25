@@ -73,17 +73,31 @@ place_generated_clip(client, gen_D, session_uid,
 
 ## Checking version state
 
+Version info is in the session export — no separate call needed when you already have `doc`:
+
+```python
+doc = export_session(client, session_uid)
+track = view_track(doc, track_uid)
+versions = track.get('versions', [])
+# versions: [{'version': 1, 'uid': '...', 'name': 'V1', 'is_active': True, 'regions': [...]}]
+```
+
+Use `list_versions` only when you need version state without a full export (e.g., a lightweight check between operations):
+
 ```python
 versions = list_versions(client, session_uid, track_uid)['data']['versions']
-for v in versions:
-    print(f"{v['name']}: {v['clip_count']} clips")
+# versions: [{'version': 1, 'uid': '...', 'name': 'V1', 'clip_count': 2}]
 ```
+
+The export `versions` field includes full region data per version. `list_versions` returns clip_count only — cheaper when you just need counts.
 
 ## Cleaning up stray versions
 
 ```python
-for v in versions:
-    if v['name'] == 'stray version':
+doc = export_session(client, session_uid)
+track = view_track(doc, track_uid)
+for v in track.get('versions', []):
+    if 'stray' in v['name']:
         delete_version(client, session_uid, track_uid, v['version'])
 # Note: cannot delete version 1 (V1 / primary playlist)
 ```
