@@ -1,6 +1,6 @@
 ---
-name: luna-take-versions
-description: Use when placing multiple generated audio clips as auditionable takes on a LUNA track — alternate takes the producer can switch between, multi-segment versions where different clips need to land on the same named version, or any time you need to manage versions/playlists on a track. Fires on phrases like "add as a new take", "add another version", "place this on the same version", "let the producer audition", "alternate take", or any workflow involving place_version, place_generated_clip across multiple takes, or list_versions.
+name: luna-multi-segment-version
+description: Use when placing multiple generated clips as segments of the same named version on a LUNA track — e.g., 8 bars on A chord followed by 8 bars on D chord, both belonging to "Take 2" so the producer can audition the full sequence as one version. Do NOT use for single-clip versions (place_version handles that alone) or for placing clips on separate versions. Trigger phrases: "add both segments to the same take", "place this on the same version", "the second clip should be part of Take 2", "build out that version with the next section".
 ---
 
 # LUNA Take & Version Placement
